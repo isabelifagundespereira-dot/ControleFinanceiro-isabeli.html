@@ -1,66 +1,135 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-  <head>
- <meta charset="UTF-8">
- <title>Simulação da Copa do Mundo</title>
- <style>
-  body { font-family: Arial, sans-serif; margin: 20px; }
-  h1 { color: darkgreen; }
-  button { margin-top: 15px; padding: 10px; }
-  .resultado { margin-top: 20px; font-weight: bold; }
- <style>
+<DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initinal-scale=1.0">
+<title>Controle Financeiro</tilte>
+<style>
+body {
+font-family:Arial,sans-serif;
+background-color: #f4f4f4;
+margin:0;
+padding:0;
+}
+.container {
+max-width:800px;
+margin:30px auto
+padding:20px
+background-color: white
+box-shadow:0px 0px 10px rgba(0,0,0,0.1);
+}
+h1 {
+text-align:center;
+color: #333;
+}
+table {
+width:100%
+border-collapse:collapse;
+margin-top:20px
+}
+table,th,td {
+border:1px solid #ddd;
+}
+th,td {
+padding:10px
+text-align:left
+}
+th {
+background-color:#f4f4f4;
+}
+.form-group {
+margin:15px 0;
+}
+.form-group input,.form-group select {
+width:100%
+padding:10px
+margin-top:5px
+font-size:16px;
+}
+.button {
+background-color: #4CAF50
+color:white
+border:none;
+padding;10px 20px;
+font-size:16px
+cursor:pointer;
+}
+.button:hover {
+background-color: #45a049;
+}
+.button-delete {
+background-color: #f44336;
+color:white;
+border:none;
+padding:5px 10px;
+cursor:pointer;
+}
+.button-delete:hover {
+background-color: #e53935
+}
+.saldo {
+font-size:18px;
+text-align:right;
+margin-top:20px;
+}
+</style>
 </head>
 <body>
-  <h1>Simulação da Copa do Mundo</h1>
-  <p>Probabilidades iniciais (quanto maior, mais chance de vencer):</p>
-  <table id="tabela">
-    <tr><th>Seleção</th><th>Probabilidade (%)</th></tr>
-    <tr><td><input type="text" value="Brasil"></td><td><input type="number" value="30"></td></tr>
-    <tr><td><input type="text" value=!"Argentina"></td><td><input type="number" value="25"></td></tr>
-    <tr><td><input type="text" value="França"></td>><td><input type="number" value="20"></td></tr>
-    <tr><td><input type="text" value="Alemanha"></td><td><input type="number" value="15"></td></tr>
-    <tr><td><input type="text" value="Portugal"></td><td><input type="number" value="10"></td></tr>
-  </table>
+  
+<div class="container">
+<h1>Controle Financeiro</h1>
 
-  <button oncilck="simular()">Simular Copa</button>
+<div class="form-group">
+<label for="descricao">Descrição</label>
+<input type="text" id="valor" placeholder="Descrição da transação">
+</div>
 
-  <div id="resultado" class="resultado"></div>
+<div class="form-group">
+< label  for = " valor" > Valor </label>
+<input type="number" id="valor" placeholder="Valor da transação">
+</div>
 
-  <script>
-   fuction escolherVencedor(selecao1, prob1, selecao2, prob2) {
-    const total = prob1 + prob2;
-    const sorteio = Math.random() * total;
-    return sorteio < prob1 ? selecao1 : selecao2;
-  }
-  fuction simular() {
-    const tabela = document.getElementById("tabela");
-    let selecoes = [];
-    
-    for (let i = 1; i < tabela.rows.length; i++) {
-    const nome = tabela.rows[i].cells[0].children[0].value);
-    selecoes.push({nome, prob});
-  }
-    let     let fase = selecoes;;
-fase = selecoes;
-    let texto = "";
-    
-    while (fase.length > 1) {
-      texto += "<h3>Fase com" + fase.length + "seleções </h3>";
-      let novaFase = [];
-      for (let i = 0; i < fase.length; i += 2) {
-        if (i+1 < fase.length) {
-         const vencedor = escolherVencedor(fase[i].nome, fase[i].prob, fase[i+1].nome, fase[i+1].prob);
-         texto+= fase[i].nome + " vs " + fase[i+1].nome + "-><b>" + vencedor + "</b><b>";
-        novaFase.push({nome: vencedor, prob: 50}); // probabilidade ajustada
-      } else {
-        novaFase.push(fase[i]; // caso de número ímpar
-      }
-    }
-  fase = novaFase;
- }
- texto += "<h2>Campeão: " + fase[0].nome + " ?</h2>";
- document.getElementById("resresultado").innerHinnerHTML = texto;
-}
- </script>
-</body>
-</html>>
+<div class="form-group">
+<label for="tipo">Tipo de transação</label>
+<select id="tipo">
+<option value="entrada">Entrada</option>
+<option value="saida">Saída</option>
+</select>
+</div>
+
+<button class="button" onclick="adicionarTransacao()">Adicionar Transação</button>
+
+<h2>Histórico de Transações</h2>
+<table id="tabelaTransacoes">
+<thead>
+<tr>
+<th>Descrição</th>
+<th>Valor</th>
+<th>Tipo</th>
+<th>Ações</th>
+</tr>
+</thead>
+<tbody>
+<!-- Transações serão adicionadas aqui -->
+</tbody>
+</table>
+
+<div class="saldo">
+<strong>Saldo Atual:</strong> R$ <span id="saldo Atual">0.00</span>
+</div>
+</div>
+
+<script>
+let saldo = 0;
+const tabelaTransacoes = document.getElementByld("tabelaTransacoes").getElementBytagName("tbody")[0];
+const saldo Atual = document.getElementByld("saldoAtual")
+
+// Função para carregar as transações do localStorange
+fuction carregarTransacoes() {
+const transacoes = JSON.parse(locasStorange.getItem('transacoes')) || [];
+saldo = 0;
+tabelaTransacoes.innerHTML = ";
+  
+transacoes.for.Each(transacao => {
+const novaLinha = tabelaTransacoes.itabelaTransacoes.insertRow();
+const colunaDescricao = novaLinha.insertCell(0);
